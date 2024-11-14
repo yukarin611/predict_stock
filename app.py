@@ -72,40 +72,40 @@ try:
         X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(
             X, y, test_size = 0.2)
 
-    model = sklearn.linear_model.LinearRegression()
-    model.fit(X_train,y_train)
+        model = sklearn.linear_model.LinearRegression()
+        model.fit(X_train, y_train)
 
-    accuracy = model.score(X_test, y_test)
+        accuracy = model.score(X_test, y_test)
 
-    st.write(f'正解率は{round((accuracy) * 100, 1)}%です。')
+        st.write(f'正答率は{round((accuracy) * 100, 1)}%です。')
 
-    if accuracy > 0.75:
-        st.write('信頼度:高')
-    elif accuracy > 0.5:
-        st.write('信頼度:中')
-    else:
-        st.write('信頼度:低')
-    st.write('オレンジの線(Predict)が予測値です。')
+        if accuracy > 0.75:
+            st.write('信頼度：高')
+        elif accuracy > 0.5:
+            st.write('信頼度：中')
+        else:
+            st.write('信頼度：低')
+        st.write('オレンジの線（Predict）が予測値です。')
 
-    predicted_data = model.predict(predict_data)
-    df_stock['Predict'] = np.nan
-    last_date = df_stock.iloc[-1].name
-    one_day = 86400
-    next_unix = last_date.timestamp() + one_day
+        predicted_data = model.predict(predict_data)
+        df_stock['Predict'] = np.nan
+        last_date = df_stock.iloc[-1].name
+        one_day = 86400
+        next_unix = last_date.timestamp() + one_day
 
-    for data in predicted_data:
-        next_date =datetime.datetime.fromtimestamp(next_unix)
-        next_unix += one_day
-        df_stock.loc[next_date] = np.append([np.nan]* (len(df_stock.columns)-1), data)
-    
-    df_stock['Close'].plot(figsize=(15,6), color="green")
-    df_stock['Predict'].plot(figsize=(15,6), color="orange")
+        for data in predicted_data:
+            next_date =datetime.datetime.fromtimestamp(next_unix)
+            next_unix += one_day
+            df_stock.loc[next_date] = np.append([np.nan]* (len(df_stock.columns)-1), data)
+        
+        df_stock['Close'].plot(figsize=(15,6), color="green")
+        df_stock['Predict'].plot(figsize=(15,6), color="orange")
 
-    df_stock3 = df_stock[['Close','Predict']]
-    st.line_chart(df_stock3)
-                    
+        df_stock3 = df_stock[['Close','Predict']]
+        st.line_chart(df_stock3)
+                        
     if st.button('予測する'):
-        stock_predict()
+            stock_predict()
 
 except:
     st.error(
